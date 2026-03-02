@@ -14,9 +14,9 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.use("/auth", authRoutes)
-app.use("/memories", memoryRoutes)
-app.use("/albums", albumRoutes)
+app.use("/api/auth", authRoutes)
+app.use("/api/memories", memoryRoutes)
+app.use("/api/albums", albumRoutes)
 app.use("/api/voice-notes", voiceNoteRoutes)
 
 app.get("/", (req, res) => {

@@ -1,38 +1,14 @@
 import express from "express"
-import Memory from "../models/Memory.js"
+import { getMemories, addMemory } from "../controllers/memoryController.js"
+import upload from "../middleware/uploadMiddleware.js"
+import authMiddleware from "../middleware/authMiddleware.js" // ✅ import auth middleware
 
 const router = express.Router()
 
-// CREATE MEMORY
-router.post("/", async (req, res) => {
-  try {
-    const { title, description, image_url, location, date } = req.body
+// GET all memories (protected)
+router.get("/", authMiddleware, getMemories)
 
-    const newMemory = new Memory({
-      title,
-      description,
-      image_url,
-      location,
-      date,
-    })
-
-    const savedMemory = await newMemory.save()
-
-    res.status(201).json(savedMemory)
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Failed to create memory" })
-  }
-})
-
-// GET ALL MEMORIES
-router.get("/", async (req, res) => {
-  try {
-    const memories = await Memory.find().sort({ createdAt: -1 })
-    res.json(memories)
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch memories" })
-  }
-})
+// POST memory with multiple images (protected)
+router.post("/", authMiddleware, upload.array("images"), addMemory)
 
 export default router

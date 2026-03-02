@@ -1,24 +1,22 @@
-import jwt from "jsonwebtoken"
-import { errorResponse } from "../utils/responseHandler.js"
+import jwt from "jsonwebtoken";
+import { errorResponse } from "../utils/responseHandler.js";
 
 const protect = (req, res, next) => {
-  let token
+  let token;
 
   if (req.headers.authorization?.startsWith("Bearer")) {
-    token = req.headers.authorization.split(" ")[1]
+    token = req.headers.authorization.split(" ")[1];
   }
 
-  if (!token) {
-    return errorResponse(res, "Not authorized, no token", 401)
-  }
+  if (!token) return errorResponse(res, "Not authorized, no token", 401);
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    req.user = decoded
-    next()
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: decoded.id }; // <-- set user ID for voice_notes
+    next();
   } catch (error) {
-    return errorResponse(res, "Invalid token", 401)
+    return errorResponse(res, "Invalid token", 401);
   }
-}
+};
 
-export default protect
+export default protect;

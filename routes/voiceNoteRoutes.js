@@ -7,11 +7,11 @@ import {
   deleteVoiceNote,
   reactToNote,
   addComment,
-  getComments
+  getComments,
 } from "../controllers/voiceNoteController.js";
 
 const router = express.Router();
-const upload = multer();
+const upload = multer(); // uses memory storage for Supabase
 
 router.post("/upload", protect, upload.single("file"), uploadVoiceNote);
 router.get("/", protect, getVoiceNotes);
